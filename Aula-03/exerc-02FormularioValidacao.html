@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=<form>, initial-scale=1.0">
+    <title>Formulário</title>
+
+    <script>
+        function mensagem() {
+            alert("Eu sou um alerta");
+        }
+        function validar(){
+            //let nome = document.getElementById("nome").value;
+            let campo_nome = cadastro.nome.value;
+            let senha = cadastro.senha.value;
+            let confirmar_senha = cadastro.confirmar_senha.value;
+
+            if(campo_nome == ""){
+                alert("Preencha o campo nome");
+                cadastro.nome.focus();
+                return false;
+            }
+            else if(senha == "" || senha.length <= 5 ){
+                alert("Senha deve ter mais de 5 caracteres");
+                cadastro.senha.focus();
+                return false;
+            }
+            else if(senha != confirmar_senha){
+                alert("Senhas não conferem");
+                cadastro.confirmar_senha.focus();
+                return false;
+            }
+            else{
+                return true;
+            }
+
+            {
+                alert(`Olá ${campo_nome}, seja bem vindo(a)`);
+            }
+        }
+    </script>
+</head>
+<body>
+    <form>
+        <input type="button" onclick=mensagem() value="Clique aqui">
+    </form>
+
+    <form name="cadastro" method="get">
+        <label>Nome:</label>
+        <input type="text" name="nome"><br><br>
+        <label>Senha:</label>
+        <input type="password" name="senha"><br><br>
+        <label>Confirmar Senha:</label>
+        <input type="password" name="confirmarSenha"><br><br>
+        <input type="submit" onclick= "return validar()" value="Enviar">
+    </form>
+</body>
+</html>
