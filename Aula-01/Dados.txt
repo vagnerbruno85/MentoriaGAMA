@@ -1,0 +1,18 @@
+--Uso do Git, 
+
+O exercicio proposto foi a criação de um documento qualquer envio do mesmo para o repositório.
+
+Para execução da atividade fomos orientados a fazer as configurações necessárias, em seguida a criação 
+do documento e o passo a passo. 
+
+DADOS:
+
+
+Vagner 
+Bruno 
+Lorem 
+Ipson
+GAMA
+Floripa
+
+Arquivo Modificado
