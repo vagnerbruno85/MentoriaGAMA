@@ -1,52 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tabuada GAMA - Javascript</title>
 
     <script>
-        function executar(){
-            let numero = document.getElementById("num").value;
-            let resultado = document.getElementById("resultado");
-            let tabuada = "";
-            for(let i=1; i<=10; i++){
-               tabuada += `${numero} x ${i} = ${numero*i}<br>`;
-                            
-            }
-            resultado.innerHTML = tabuada
-        }
-
-    function tabuada(){
-        var num = parseInt(document.getElementById("num").value);
-        var resposta = document.getElementById('resposta');
-        var tabuada='';
-
-    for(var count=1; count<=10 ; count++)
-    tabuada += num+" x "+count+" = "+
-               num*count+"<br />";
-  
-    resposta.innerHTML = tabuada;
-}
-
+      function tabuada() {
+        let num = parseInt(document.getElementById("num").value);
+        for (let count = 1; count <= 10; count++)
+          document.write(`${num} x ` + count + " = " + num * count + "<br/>");
+      }
     </script>
-
-</head>
-<body>
-    <form name="tabuada" method="get">
-        <label>Digite o valor</label>
-        <input id="num" type="number"><br><br>
-
-        <input type="submit" onclick="return executar()" value="Executar">
-    </form>
-
-    <div id = "resultado"></div>
-
-
-    Tabuada do número: <input id="num" type="number"> <br />
-    <button onclick="tabuada()">Exibir</button><br />
-    Tabuada: <br />
-    <div id='resposta' style='display:inline'></div>
-</body>
+  </head>
+  <body>
+    <body>
+      <div>
+        <h1>Digite ou selecione um numero.</h1>
+        <input id="num" type="number" /><br /><br />
+      </div>
+      <button onclick="return tabuada()">Exibir Tabuada</button>
+    </body>
+  </body>
 </html>
