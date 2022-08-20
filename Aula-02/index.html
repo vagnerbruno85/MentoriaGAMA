@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página em JavaScript</title>
+    <script>
+        
+        // RECONHECIMENTO DO AMBIENTE HTML E JAVASCRIPT //
+
+        /*
+        let msg = "Seja bem Vindo";
+        let msg2 = " você tem: "; 
+
+        alert(msg + msg2);
+
+        let nome = prompt("Digite seu nome: ");
+        let idade = prompt( nome + " Digite sua idade: ");
+        let email = prompt("Digite seu email: ");
+
+        alert( msg +" " +nome + msg2 + idade + " anos" + " e seu email é: " + email);
+
+        document.writeln("<h2>Seja bem vindo ao meu site</h2>");
+        document.writeln("<h2>Seja bem vindo ao meu site</h2>");
+ 
+        document.writeln("<h2>Seja bem vindo ao meu site</h2>");
+        */
+    </script>
+    <style>
+        /*criando stilo em tag nativo do html*/
+        p{
+            color: #571047;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        body{
+            background-color: #cccccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Usando o JavaScript para criar intervenções com nosso HTML</h1>
+    <p id="paragrafo">
+        <strong>
+            Seja bem vindo ao meu site
+        </strong>
+    </p>
+
+    <p id="texto"></p>
+    <p id="texto1"></p><br>
+    <p id="texto2"></p><br>
+    <p class="java"></p><br>
+
+    <script>
+        let paragrafo = document.getElementById("paragrafo");
+        paragrafo.style.color = "red";
+        paragrafo.style.fontSize = "20px";
+        paragrafo.style.fontWeight = "bold";
+
+        document.getElementById("texto").innerHTML = "Bem vindos meus amigos";
+        document.getElementsByTagName("p")[0].innerHTML = "Bem vindos ao meu site";
+        paragrafo.style.color = "blue";
+
+        document.getElementsByClassName("java");
+        collection[0].innerHTML = "Oi";
+    </script>
+    
+
+</body>
+</html>
