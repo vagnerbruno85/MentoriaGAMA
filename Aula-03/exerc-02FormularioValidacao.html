@@ -1,59 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=<form>, initial-scale=1.0">
-    <title>Formulário</title>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulario</title>
     <script>
-        function mensagem() {
-            alert("Eu sou um alerta");
-        }
-        function validar(){
-            //let nome = document.getElementById("nome").value;
-            let campo_nome = cadastro.nome.value;
-            let senha = cadastro.senha.value;
-            let confirmar_senha = cadastro.confirmar_senha.value;
+      function confereSenha() {
+        var senha = cadastro.senha.value;
+        var confirma = cadastro.confirma.value;
+        console.log(`${senha} + ${confirma}`);
 
-            if(campo_nome == ""){
-                alert("Preencha o campo nome");
-                cadastro.nome.focus();
-                return false;
-            }
-            else if(senha == "" || senha.length <= 5 ){
-                alert("Senha deve ter mais de 5 caracteres");
-                cadastro.senha.focus();
-                return false;
-            }
-            else if(senha != confirmar_senha){
-                alert("Senhas não conferem");
-                cadastro.confirmar_senha.focus();
-                return false;
-            }
-            else{
-                return true;
-            }
-
-            {
-                alert(`Olá ${campo_nome}, seja bem vindo(a)`);
-            }
+        if (confirma === senha) {
+          alert("As senhas são IGUAIS");
+        } else {
+          alert("As senhas são DIFERENTES, revise os campos para prosseguir");
+          cadastro.confirma.focus();
+          return false;
         }
+      }
+
+      function senhaOK() {
+        alert("Senhas conferem");
+      }
     </script>
-</head>
-<body>
-    <form>
-        <input type="button" onclick=mensagem() value="Clique aqui">
-    </form>
+    <style>
+      legend {
+        font-style: bold;
+        font-family: "Segoe UI";
+      }
+      fieldset {
+        width: 300px;
+        height: 200px;
+        border-radius: 10px;
+      }
+      #form {
+        position: relative;
+        left: 35%;
+        top: 29%;
+        width: 320px;
+        height: 270px;
+      }
+      #form #cadastro {
+        position: absolute;
+        display: block;
+      }
 
-    <form name="cadastro" method="get">
-        <label>Nome:</label>
-        <input type="text" name="nome"><br><br>
-        <label>Senha:</label>
-        <input type="password" name="senha"><br><br>
-        <label>Confirmar Senha:</label>
-        <input type="password" name="confirmarSenha"><br><br>
-        <input type="submit" onclick= "return validar()" value="Enviar">
+    </style>
+  </head>
+  <body>
+    <div id="form">
+    <form
+      action=""
+      method="POST"
+      name="cadastro"
+      onsubmit="return confereSenha();"
+      accept-charset=""
+    >
+      <fieldset>
+        <legend><h3>Formulário - GAMA</h3></legend>
+        <div>
+          <label for="nome">Nome: </label>
+          <input
+            type="text"
+            id="nome"
+            name="nome"
+            placeholder="Digite seu nome"
+            required
+          />
+          <br />
+          <label>Senha:</label>
+          <input
+            type="password"
+            name="senha"
+            size="15"
+            placeholder="Digite sua senha"
+            required
+          />
+          <br />
+          <label>Repita a senha:</label>
+          <input
+            type="password"
+            name="confirma"
+            size="15"
+            placeholder="Repita sua senha"
+            required
+          />
+          <br />
+          <label for="envia"></label>
+
+          <input type="submit" id="envia" value="Enviar" />
+        </div>
+      </fieldset>
     </form>
-</body>
+  </div>
+  </body>
 </html>
