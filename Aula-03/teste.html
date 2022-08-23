@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Formulario</title>
+    <script>
+      function confereSenha() {
+        var senha = cadastro.senha.value;
+        var confirma = cadastro.confirma.value;
+        console.log(`${senha} + ${confirma}`);
+
+        if (confirma === senha) {
+          alert("As senhas são IGUAIS");
+        } else {
+          alert("As senhas são DIFERENTES, revise os campos para prosseguir");
+          cadastro.confirma.focus();
+          return false;
+        }
+      }
+
+      function senhaOK() {
+        alert("Senhas conferem");
+      }
+    </script>
+    <style>
+      legend {
+        font-style: bold;
+        font-family: "Segoe UI";
+      }
+      fieldset {
+        width: 300px;
+        height: 200px;
+        border-radius: 10px;
+      }
+      #form {
+        position: relative;
+        left: 35%;
+        top: 29%;
+        width: 320px;
+        height: 270px;
+      }
+      #form #cadastro {
+        position: absolute;
+        display: block;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="form">
+    <form
+      action=""
+      method="POST"
+      name="cadastro"
+      onsubmit="return confereSenha();"
+      accept-charset=""
+    >
+      <fieldset>
+        <legend><h3>Formulário - GAMA</h3></legend>
+        <div>
+          <label for="nome">Nome: </label>
+          <input
+            type="text"
+            id="nome"
+            name="nome"
+            placeholder="Digite seu nome"
+            required
+          />
+          <br />
+          <label>Senha:</label>
+          <input
+            type="password"
+            name="senha"
+            size="15"
+            placeholder="Digite sua senha"
+            required
+          />
+          <br />
+          <label>Repita a senha:</label>
+          <input
+            type="password"
+            name="confirma"
+            size="15"
+            placeholder="Repita sua senha"
+            required
+          />
+          <br />
+          <label for="envia"></label>
+
+          <input type="submit" id="envia" value="Enviar" />
+        </div>
+      </fieldset>
+    </form>
+  </div>
+  </body>
+</html>
