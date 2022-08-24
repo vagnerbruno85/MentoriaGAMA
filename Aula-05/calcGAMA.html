@@ -17,6 +17,11 @@
         color: fff;
         font-family: Arial, Helvetica, sans-serif;
       }
+      #display1{
+        color: "#777";
+        font-size: 14px;
+
+      }
       #display {
         height: 90px;
         border-radius: 6px;
@@ -24,9 +29,10 @@
         margin: 8px;
         margin-bottom: 15px;
         color: white;
-        font-size: 18px;
+        font-size: 20px;
+        padding: 5px;
         font-family: Verdana, Geneva, Tahoma, sans-serif;
-        font-weight: bold;
+        overflow-wrap:break-word
       }
       #tecla0 {
         width: 105px;
@@ -56,8 +62,13 @@
       }
     </style>
     <script>
+      const historico = document.querySelector("#display1")
+      
       function inserir(num) {
         var numero = document.getElementById("display").innerHTML;
+        // if(numero.indexOf(",") > -1)return;
+        if (num === "," && numero.includes(","))return;
+       
         document.getElementById("display").innerHTML = numero + num;
       }
       function limpar() {
@@ -69,11 +80,14 @@
       }
       function calcular() {
         var resultado = document.getElementById("display").innerHTML;
+        var historico = [];
+
         if (resultado) {
+          var historico=resultado
           document.getElementById("display").innerHTML = eval(resultado);
         }
       }
-      function historico(){
+      function historic(){
         alert("Histórico")
       }
     </script>
@@ -81,10 +95,14 @@
   <body>
     <div class="background">
       <div class="calc">
-        <button id="@" class="botao@" onclick="historico()">@</button><br/><br/>
-
-        <p id="display1"></p>
-        <p id="display"></p>
+        <button id="@" class="botao@" onclick="historic()">@</button><br/><br/>
+        
+        <div id="display">
+          <div id="display1">
+          
+           </div>
+          
+        </div>
 
         <button id="tecla%" class="botao" onclick="inserir('%')">%</button>
         <button id="teclaC" class="botao" onclick="limpar()">C</button>

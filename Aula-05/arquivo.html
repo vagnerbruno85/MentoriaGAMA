@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página geradora de arquivos</title>
+    <style>
+        .arquivo {
+            width: 350px;
+        }
+        /* input{
+            width: 550px;
+        } */
+    </style>
+</head>
+<body>
+    <h1>Criando um arquivo com JavaScript</h1>
+    <div>
+    <label>Nome do Arquivo</label><br>
+    <input type="text" id = "titulo" class = "arquivo" placeholder="Digite o nome do arquivo que deseja criar"/>
+
+    </div>
+    <div>
+        <label>Digite o texto desejado</label><br>
+        <textarea id="texto" cols="20" rows="4">
+
+        </textarea>
+    </div>
+    <div> 
+        <button onclick="salvar()">Salvar</button>
+    </div>
+
+    <!-- fazendo a chamada das bibliotecas JS -->
+    <script type="text/Javascript" src="./FileSaver.js"></script>
+    <script type="text/Javascript" src="./index.js"></script>
+
+</body>
+</html>
