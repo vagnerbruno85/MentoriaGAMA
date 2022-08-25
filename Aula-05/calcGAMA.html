@@ -62,12 +62,12 @@
       }
     </style>
     <script>
-      const historico = document.querySelector("#display1")
+      const historico = document.getElementById("display1")
       
       function inserir(num) {
         var numero = document.getElementById("display").innerHTML;
         // if(numero.indexOf(",") > -1)return;
-        if (num === "," && numero.includes(","))return;
+        //if (num === "," && num.includes(","))return;
        
         document.getElementById("display").innerHTML = numero + num;
       }
@@ -80,10 +80,8 @@
       }
       function calcular() {
         var resultado = document.getElementById("display").innerHTML;
-        var historico = [];
 
         if (resultado) {
-          var historico=resultado
           document.getElementById("display").innerHTML = eval(resultado);
         }
       }
@@ -97,12 +95,7 @@
       <div class="calc">
         <button id="@" class="botao@" onclick="historic()">@</button><br/><br/>
         
-        <div id="display">
-          <div id="display1">
-          
-           </div>
-          
-        </div>
+        <div id="display"></div>
 
         <button id="tecla%" class="botao" onclick="inserir('%')">%</button>
         <button id="teclaC" class="botao" onclick="limpar()">C</button>

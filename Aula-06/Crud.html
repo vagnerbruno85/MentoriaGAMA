@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerenciamento de registros - GAMA</title>
+
+    <style>
+      h2 {
+        color: black;
+      }
+      #field{
+        width: 450px;
+      }
+      #table{
+        width: 300px; 
+        margin-left: auto;
+        margin-right: auto; 
+      }
+    </style>
+  </head>
+  <body>
+    <fieldset id="field">
+      <!--Adicionando registros-->
+      <h2>Sistema de Controle de Registros -CRUD</h2>
+      <form action="javascript:void(0);" method="POST" onsubmit="app.Add()">
+        <input type="text" id="add-name" placeholder="Digite um nome" />
+        <input type="submit" value="Adicionar" />
+      </form>
+
+      <!--Editar/Modificar registros-->
+      <div id="spoiler" role="aria-hidden">
+        <form action="javascript:void(0);" method="POST" id="saveEdit">
+          <input type="text" id="edit-name" />
+          <input type="submit" value="Editar" /><a
+            onclick="CloseInput()"
+            area-label="close"
+            >&#10006;</a
+          >
+        </form>
+      </div>
+      <p id="counter"></p>
+
+      <table border="1" id="table">
+        <tr>
+          <th>Tabela de registros</th>
+          <tbody id="countries"></tbody>
+        </tr>
+      </table>
+    </fieldset>
+    <!--Scripts-->
+    <script>
+      var app = new (function () {
+        this.el = document.getElementById("countries");
+        this.countries = [
+          "Erica",
+          "Ailson",
+          "Artur",
+          "Gilmar",
+          "Vagner",
+          "Victor",
+          "Ricardo",
+        ];
+
+        this.Count = function (data) {
+          var el = document.getElementById("counter");
+          var nome = "Registro";
+
+          if (data) {
+            if (data > 1) {
+              name = " Registros";
+            }
+            el.innerHTML = data + " - " + name;
+          } else {
+            el.innerHTML = "Nenhum " + name;
+          }
+        };
+        //Monta a lista de nomes com base na variavel que foram setadas
+        this.FetchAll = function () {
+          var data = "";
+          if (this.countries.length > 0) {
+            //criando laço
+            for (i = 0; i < this.countries.length; i++) {
+              data += "<tr>";
+              data += "<td>" + this.countries[i] + "</td>";
+              data +=
+                '<td><button onclick="app.Edit(' +
+                i +
+                ')">Editar</button></td>';
+              data +=
+                '<td><button onclick="app.Delete(' +
+                i +
+                ')">Excluir</button></td>';
+              data += "</tr>";
+            }
+          }
+          this.Count(this.countries.length);
+          return (this.el.innerHTML = data);
+        };
+        //Montando a função para adicionar um elemento
+        this.Add = function () {
+          el = document.getElementById("add-name");
+          //pega o valor da cx de texto
+          var country = el.value;
+          if (country) {
+            //Adicionando um novo valor
+            this.countries.push(country.trim());
+            //
+            el.value = "";
+            this.FetchAll();
+          }
+        };
+
+        this.Edit = function (item) {
+          var el = document.getElementById("edit-name");
+          el.value = this.countries[item];
+          document.getElementById("spoiler").style.display = "block";
+          document.getElementById("saveEdit").onsubmit = () => {
+            var country = el.value;
+            if (country) {
+              alert(country);
+              this.countries.splice(item, 1, country.trim());
+              this.FetchAll();
+              //Ocultar os campos
+              CloseInput();
+            }
+          };
+        };
+
+        this.Delete = (item) => {
+          this.countries.splice(item, 1);
+          this.FetchAll();
+        };
+      })();
+      function CloseInput() {
+        document.getElementById("spoiler").style.display = "none";
+      }
+      app.FetchAll();
+    </script>
+  </body>
+</html>
