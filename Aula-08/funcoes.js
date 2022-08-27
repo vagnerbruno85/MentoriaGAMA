@@ -19,10 +19,9 @@ $(function(){
 	function Adicionar(){
 		//variável para verificar se número de código já existe
 		var cli = GetCliente("Codigo", $("#txtCodigo").val());
-        var ml = Get
 
 	// Caso existe é informado ao cliente
-		if(cli != null ){
+		if(cli != null){
 			alert("Código já cadastrado.");
 			return;
 		}
@@ -69,7 +68,7 @@ $(function(){
 			"	<th>Telefone</th>"+
 			"	<th>Email</th>"+
 			"	<th>Data Cad</th>"+
-            "<th></th>"+
+			"	<th></th>"+
 			"	</tr>"+
 			"</thead>"+
 			"<tbody>"+
@@ -82,13 +81,13 @@ $(function(){
 			// Formatar data para o format brasileiro dia, mes, ano
 			var dtfinal = cli.DtCad.substring(8,10) + "/" +cli.DtCad.substring(5,7)  +"/"  +cli.DtCad.substring(0,4);
 		  	$("#tblListar tbody").append("<tr>"+
-										 "	<td>"+cli.Codigo+"</td>" + 
-										 "	<td>"+cli.Nome+"</td>" + 
-										 "	<td>"+cli.Telefone+"</td>" + 
-										 "	<td>"+cli.Email+"</td>" + 
-										 "	<td>"+dtfinal+"</td>" +
-                                         "	<td><img src='assets/edit.png' alt='"+i+"' class='btnEditar'/><img src='assets/delete.png' alt='"+i+"' class='btnExcluir'/></td>" + 
-		  								 "</tr>");
+			  "	<td>"+i+"</td>" + 
+			  "	<td>"+cli.Nome+"</td>" + 
+			  "	<td>"+cli.Telefone+"</td>" + 
+			  "	<td>"+cli.Email+"</td>" + 
+			  "	<td>"+dtfinal+"</td>" + 
+			  "	<td><img src='./assets/edit.png' alt='"+i+"' class='btnEditar'/><img src='./assets/delete.png' alt='"+i+"' class='btnExcluir'/></td>" + 
+			  "</tr>");
 		 }
 	}
 
@@ -196,3 +195,4 @@ $("#txtNome").change(function () {
 
 
 });
+
