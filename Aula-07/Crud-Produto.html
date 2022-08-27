@@ -10,13 +10,13 @@
       h2 {
         color: black;
       }
-      #field{
+      #field {
         width: 450px;
       }
-      #table{
-        width: 300px; 
+      #table {
+        width: 300px;
         margin-left: auto;
-        margin-right: auto; 
+        margin-right: auto;
       }
     </style>
   </head>
@@ -28,17 +28,33 @@
       <form action="javascript:void(0);" method="POST" onsubmit="app.Add()">
         <div>
           <p>Produto</p>
-          <input type="text" id="add-name" placeholder="Digite um produto" required />
+          <input
+            type="text"
+            id="add-name"
+            placeholder="Digite um produto"
+            required
+          />
           <p>Valor Unitário</p>
-          <input type="text" id="add-valor" placeholder="Digite o valor" required />
+          <input
+            type="text"
+            id="add-valor"
+            format="currency" precision="2"
+            placeholder="Digite o valor"
+            required
+          />
         </div>
         <div>
           <p>Quantidade</p>
-          <input type="text" id="add-quant" placeholder="Digite a quantidade" required />
+          <input
+            type="number"
+            id="add-quant"
+            placeholder="Digite a quantidade"
+            required
+          />
           <input type="submit" value="Adicionar" />
         </div>
       </form>
-      <br><br>
+      <br /><br />
 
       <!--Editar/Modificar registros-->
       <div id="spoiler" role="aria-hidden">
@@ -48,46 +64,47 @@
             onclick="CloseInput()"
             area-label="close"
             >&#10006;</a
-          ><br>
+          ><br />
 
           <input type="text" id="edit-valor" />
-          <input type="submit" value="Editar" /><br>
+          <input type="submit" value="Editar" /><br />
 
           <input type="text" id="edit-quant" />
           <input type="submit" value="Editar" />
         </form>
       </div>
       <p id="counter"></p>
-      
-        <table border="1" id="table">
-          <tr>
-            <th colspan="5" id="title">Tabela de registros</th>
-            <tbody id="countries"></tbody>
-          </tr>
-        </table>
-      
-    <h3>Agora é a hora de salvar os registros...</h3>
-    <div>
-      <label>Nome do Arquivo</label><br>
-    <input type="text" id = "titulo" class = "arquivo" placeholder="Digite o nome do arquivo que deseja criar"/>
 
-    </div>
+      <table border="1" id="table">
+        <tr>
+          <th colspan="5" id="title">Tabela de registros</th>
+          <tbody id="countries"></tbody>
+        </tr>
+      </table>
 
-      <div> 
-        <button onclick="salvar()">Salvar</button>
+      <h3>Agora é a hora de salvar os registros...</h3>
+      <div>
+        <label>Nome do Arquivo</label><br />
+        <input
+          type="text"
+          id="titulo"
+          class="arquivo"
+          placeholder="Digite o nome do arquivo que deseja criar"
+        />
       </div>
 
-
-
+      <div>
+        <button onclick="salvar()">Salvar</button>
+      </div>
     </fieldset>
     <!--Scripts-->
     <script>
-
       var app = new (function () {
         this.el = document.getElementById("countries");
-        this.countries = ['PERA'];
-        this.valores = ['R$ 19,00'];
-        this.quants = ['10'];
+        this.countries = ["PERA"];
+        this.valores = ["R$ 19,00"];
+        this.quants = ["10"];
+        this.produtos = [];
 
         this.Count = function (data) {
           var el = document.getElementById("counter");
@@ -112,8 +129,11 @@
               data += "<td>" + this.countries[i] + "</td>";
               data += "<td>" + this.valores[i] + "</td>";
               data += "<td>" + this.quants[i] + "</td>";
-              data += "<td>" + this.quants[parseInt(i)] * this.valores[parseInt(i)] + "</td>";
-              
+              data +=
+                "<td>" + "R$ "+
+                ((this.quants[(i)]) * parseFloat(this.valores[(i)])).toFixed(2) +
+                "</td>";
+
               data +=
                 '<td><button onclick="app.Edit(' +
                 i +
@@ -132,24 +152,36 @@
         this.Add = function () {
           el = document.getElementById("add-name");
           vl = document.getElementById("add-valor");
-          qt = document.getElementById("add-quant")
+          qt = document.getElementById("add-quant");
 
+          if (vl.value.includes(',')) {
+          alert("Opa!!! utiliza o valor separado por ponto( . )  para definir os centavos.");
+          vl.focus();
+          return;
+        }
           //pega o valor da cx de texto
           var country = el.value;
           var valor = vl.value;
           var quant = qt.value;
+          var produto = [];
+          
 
-          if (country && valor && quant ) {
+          if (country && valor && quant) {
+            var produto = [country, valor, quant];
             //Adicionando um novo valor
             this.countries.push(country.trim());
             this.valores.push(valor.trim());
             this.quants.push(quant.trim());
+            this.produtos.push(produto);
+            alert(produto);
+            alert(this.produtos);
 
             //resetando inputs
             el.value = "";
             vl.value = "";
             qt.value = "";
             this.FetchAll();
+            alert("Produto incluido com sucesso!");
           }
         };
         //Editar o Registro
@@ -157,7 +189,6 @@
           var el = document.getElementById("edit-name");
           var vl = document.getElementById("edit-valor");
           var qt = document.getElementById("edit-quant");
-
 
           el.value = this.countries[item];
           vl.value = this.valores[item];
@@ -191,10 +222,37 @@
       function CloseInput() {
         document.getElementById("spoiler").style.display = "none";
       }
+
+      //Criando a função para salvar o nosso arquivo fisico
+      function salvar() {
+        //variavel responsavel por armazenar os textos digitados
+        let lista = '';
+       
+        this.produtos.forEach(el => {
+          lista += el[0] + ' ';
+          lista += el[1] + ' ';
+          lista += el[2] + ' ';
+          lista += el[1]*el[2] + '\n';
+        });
+    
+
+        //recebe o nome do arquivo a ser criado
+        let titulo = document.getElementById("titulo").value;
+        //
+
+        let blob = new Blob([lista], {
+          type: "text/plain;charset=utf-8",
+        });
+
+        saveAs(blob, titulo + ".txt");
+      }
+        
+      
+
       app.FetchAll();
     </script>
 
     <script type="text/Javascript" src="./FileSaver.js"></script>
-    <script type="text/Javascript" src="./index.js"></script>
+    <!-- <script type="text/Javascript" src="./index.js"></script> -->
   </body>
 </html>
