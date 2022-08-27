@@ -1,0 +1,1265 @@
+CRUD_ BD.html
+=============================
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script> 
+	<!-- Chamada da função Javascript - JSON(JavaScript Object Notation)
+	JSON -> JSON é basicamente um formato leve de troca de informações/dados entre sistemas 
+	-->
+		 <script type="text/javascript" src="js/funcoes.js"></script> 
+
+
+
+</head>
+<body>
+	    
+		<!-- Formulário para cadastro dos clientes -->
+	<form id="frmCadastro">
+
+				<label for="txtCodigo">Código:</label>
+				<input type="text" id="txtCodigo" /><br>
+
+				<label for="txtNome">Nome:</label>
+				<input type="text" id="txtNome" /><br>
+
+				<label for="txtTelefone">Telefone:</label>
+				<input type="text" id="txtTelefone"/><br>
+
+				<label for="txtEmail">Email:</label>
+				<input type="text" id="txtEmail"/><br>
+
+				<label for="txtStatus">Status:</label>
+				<input type="text" id="txtStatus" disabled /><br>
+
+				<label for="txtDtCad">Data Cad:</label>
+				<input type="date" id="txtDtCad"/><br>
+
+				<label for="txtHora">Hora Cad:</label>
+				<input type="time" id="txtHora"/><br>
+
+				<input type="submit" value="Salvar" id="btnSalvar"/>
+			
+
+	</form>
+	<!-- Tabela para listar os clientes com possibilidade de alterar/excluir -->
+	<table id="tblListar">
+
+	</table>
+	<p id="prgfrm">
+	</p>
+</body>
+</html>
+===================================
+
+funcoes.js
+===================================
+/*  Local Storage é um recurso do HTML 5 para se armazenar dados que não são perdidos
+ao fim da seção, logo, podemos fechar e abrir o browser várias vezes e as informações
+gravadas permanecerão lá  */
+// Inicio da Função JSON
+
+$(function(){
+
+	var operacao = "A"; //"A"=Adição; "E"=Edição
+
+	var indice_selecionado = -1;
+	var tbClientes = localStorage.getItem("tbClientes");// Recupera os dados armazenados
+
+	tbClientes = JSON.parse(tbClientes); // Converte string para objeto
+
+	if(tbClientes == null) // Caso não haja conteúdo, iniciamos um vetor vazio
+		tbClientes = [];
+
+	// Função para adicionar registros
+	function Adicionar(){
+		//variável para verificar se número de código já existe
+		var cli = GetCliente("Codigo", $("#txtCodigo").val());
+
+	// Caso existe é informado ao cliente
+		if(cli != null){
+			alert("Código já cadastrado.");
+			return;
+		}
+	// caso contrário insere
+		var cliente = JSON.stringify({
+			Codigo   : $("#txtCodigo").val(),
+			Nome     : $("#txtNome").val(),
+			Telefone : $("#txtTelefone").val(),
+			Email    : $("#txtEmail").val(),
+			DtCad    : $("#txtDtCad").val()
+		});
+
+		
+		tbClientes.push(cliente);
+		localStorage.setItem("tbClientes", JSON.stringify(tbClientes));
+		alert("Registro adicionado.");
+		return true;
+		
+	}
+	
+
+	// Função para editar clientes
+	function Editar(){
+		tbClientes[indice_selecionado] = JSON.stringify({
+				Codigo   : $("#txtCodigo").val(),
+				Nome     : $("#txtNome").val(),
+				Telefone : $("#txtTelefone").val(),
+				Email    : $("#txtEmail").val(),
+				DtCad    : $("#txtDtCad").val()
+			});
+		localStorage.setItem("tbClientes", JSON.stringify(tbClientes));
+		alert("Informações editadas.")
+		operacao = "A";
+		return true;
+	}
+	// Função para listar clientes
+	function Listar(){
+		$("#tblListar").html("");
+		$("#tblListar").html(
+			"<thead>"+
+			"	<tr>"+
+			"<th></th>"+
+			"	<th>Código</th>"+
+			"	<th>Pessoa</th>"+
+			"	<th>Telefone</th>"+
+			"	<th>Email</th>"+
+			"	<th>Data Cad</th>"+
+			"	</tr>"+
+			"</thead>"+
+			"<tbody>"+
+			"</tbody>"
+			);
+
+		// Malha de repetição para inserir todos os registros
+		 for(var i in tbClientes){
+			var cli = JSON.parse(tbClientes[i]);
+			// Formatar data para o format brasileiro dia, mes, ano
+			var dtfinal = cli.DtCad.substring(8,10) + "/" +cli.DtCad.substring(5,7)  +"/"  +cli.DtCad.substring(0,4);
+		  	$("#tblListar tbody").append("<tr>"+
+									 	 "	<td><img src='img/edit.png' alt='"+i+"' class='btnEditar'/><img src='img/delete.png' alt='"+i+"' class='btnExcluir'/></td>" + 
+										 "	<td>"+cli.Codigo+"</td>" + 
+										 "	<td>"+cli.Nome+"</td>" + 
+										 "	<td>"+cli.Telefone+"</td>" + 
+										 "	<td>"+cli.Email+"</td>" + 
+										 "	<td>"+dtfinal+"</td>" + 
+		  								 "</tr>");
+		 }
+	}
+
+		// Função para excluir registros
+	function Excluir(){
+		tbClientes.splice(indice_selecionado, 1);
+		localStorage.setItem("tbClientes", JSON.stringify(tbClientes));
+		confirm("Deseja realmente excluir");
+		//alert("Registro excluído.");
+	}
+
+	// função par pesquisar cliente
+	function GetCliente(propriedade, valor){
+		var cli = null;
+        for (var item in tbClientes) {
+            var i = JSON.parse(tbClientes[item]);
+            if (i[propriedade] == valor)
+                cli = i;
+        }
+        return cli;
+	}
+	// chamda da função listar clientes
+	Listar();
+
+	// Ação com base nos eventos de formulário
+	$("#frmCadastro").on("submit",function(){
+		if(operacao == "A"){
+			return Adicionar();
+			}else
+			return Editar();		
+	});
+	// Ação com base nos eventos do botão Editar
+	$("#tblListar").on("click", ".btnEditar", function(){
+		operacao = "E";
+		indice_selecionado = parseInt($(this).attr("alt"));
+		var cli = JSON.parse(tbClientes[indice_selecionado]);
+		$("#txtCodigo").val(cli.Codigo);
+		$("#txtNome").val(cli.Nome);
+		$("#txtTelefone").val(cli.Telefone);
+		$("#txtEmail").val(cli.Email);
+		$("#txtDtCad").val()(cli.DtCad);
+		$("#txtCodigo").attr("readonly","readonly");
+		$("#txtNome").focus();
+	});
+	// Ação com base nos eventos do botão Excluir
+	$("#tblListar").on("click", ".btnExcluir", function(){
+		indice_selecionado = parseInt($(this).attr("alt"));
+		Excluir();
+		Listar();
+	});
+
+	// ultimo codigo
+	var ultimo = JSON.parse(tbClientes.slice(-1));
+	var ultconv = parseInt(ultimo.Codigo);
+	
+			$("#txtCodigo").val(ultconv+1);
+// status
+$("#txtNome").change(function () {
+	//alert( $( this ).val() );
+	var pessoa = $(this).val();
+
+	if (pessoa == "Wilson") {
+		$("#txtStatus").val('Em aberto');
+	} else
+		$("#txtStatus").val('Em andamento');
+});
+
+// Obtém a data/hora atual
+	
+	var data = new Date();
+	
+	// Guarda cada pedaço em uma variável
+	var dia     = data.getDate();           // 1-31
+	var dia_sem = data.getDay();            // 0-6 (zero=domingo)
+	var mes     = data.getMonth();          // 0-11 (zero=janeiro)
+	var ano2    = data.getYear();           // 2 dígitos
+	var ano4    = data.getFullYear();       // 4 dígitos
+	var hora    = data.getHours();          // 0-23
+	var min     = data.getMinutes();        // 0-59
+	var seg     = data.getSeconds();        // 0-59
+	var mseg    = data.getMilliseconds();   // 0-999
+	var tz      = data.getTimezoneOffset(); // em minutos
+	
+	if(dia<10) {
+		dia = '0'+dia;
+	} 
+  
+	if(mes<10) {
+		mes = '0'+ (mes+1);
+	} 
+
+	// Formata a data e a hora (note o mês + 1)
+	var str_data = dia + '/' + (mes+1) + '/' + ano4; // Brasil
+	var str_data_Brazil = ano4 + '-' + mes + '-' + dia; // europeu
+	var hora_geral = hora + ':'+ min;
+	//var str_hora = hora + ':' + min + ':' + seg;
+
+	// Mostra o resultado
+	//alert('Hoje é ' + str_data + ' às ' + str_hora);
+	$("#txtDtCad").val(str_data_Brazil);
+	$("#txtHora").val(hora_geral);
+
+	//alert(hora_geral);
+
+
+
+});
+
+
+===================================
+
+
+
+
+
+
+
+
+
+Turma eu disse que funciona, segue o fonte com o function e o self
+crud.html com function e self
+=======================
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Registros</title>
+
+    <!--Como ver a cor de um CSS através de um HexaDecimal-->
+    <style>
+        h2 {
+            color: black;
+        }
+
+        #spoiler {
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!--Adicionando registros na nossa página-->
+    <h2>Sistema de Controle de Registros - CRUD</h2>
+    <form action="javascript:void(0);" method="POST" onsubmit="app.Add()">
+        <input type="text" id="add-name" placeholder="Digite um nome">
+        <input type="submit" value="Adicionar">
+    </form>
+
+    <!--Área destinada para editar/modificar os registros -->
+    <div id="spoiler" role="aria-hidden">
+        <form action="javascript:void(0);" method="POST" id="saveEdit">
+            <input type="text" id="edit-name">
+            <input type="submit" value="Editar" /><a onclick="CloseInput()" aria-label="Close">&#10006;</a>
+
+        </form>
+    </div>
+
+    <!--Contador de Registros-->
+    <p id="counter"></p>
+
+    <!--Criando uma área com a tabela para mostrar os registros armazenados-->
+    <table border="0">
+        <!--Criando uma linha na tabela-->
+        <tr>
+            <th>Tabela de Registros</th>
+            <tbody id="countries">
+
+            </tbody>
+        </tr>
+    </table>
+
+    <!--Desenvolvendo as funções dentro do JavaScript para gerar o nosso CRUD-->
+    <script>
+        var app = new function () {
+            this.el = document.getElementById('countries');
+            this.countries = ['Erica', 'Ailson', 'Arthur', 'Gilmar', 'Vagner', 'Victor', 'Ricardo'];
+
+            this.Count = function (data) {
+                var el = document.getElementById('counter');
+                var name = 'Registro';
+
+                if (data) {
+                    if (data > 1) {
+                        name = 'Registros';
+                    }
+                    el.innerHTML = data + ' - ' + name;
+                } else {
+                    el.innerHTML = 'Nenhum ' + name;
+                }
+            }
+
+            // Monta a nossa lista de nomes com base na variável que foi setada
+            this.FetchAll = function () {
+                var data = '';
+                if (this.countries.length > 0) {
+                    //alert("contou");
+                    //Criando um laço de repetição para montar os registros da tabela
+                    for (var i = 0; i < this.countries.length; i++) {
+                        //alert("gera registro");
+                        data += '<tr>';
+                        data += '<td>' + this.countries[i] + '<td>';
+                        data += '<td><button onclick="app.Edit(' + i + ')">Editar</button></td>';
+                        data += '<td><button onclick="app.Delete(' + i + ')">Excluir</button></td>';
+                        data += '</tr>';
+                    }
+                }
+                this.Count(this.countries.length);
+                return this.el.innerHTML = data;
+
+            };
+
+            //Montando a função para adicionar um novo registro
+            this.Add = function () {
+                alert("adiconar");
+                el = document.getElementById('add-name');
+
+                //Pegando o valor digitado na caixa de texto
+                var country = el.value;
+                if (country) {
+                    // Adicionando um novo valor
+                    this.countries.push(country.trim());
+                    //Redefinindo um valor de entrada
+                    el.value = '';
+                    //Chama a função principal para atualizar os registros da nossa tabela
+                    this.FetchAll();
+
+                }
+            };
+
+            //Montando a nossa função para editar os registros 
+            this.Edit = function (item) {
+                var el = document.getElementById('edit-name');
+                // Exibe o valor no campo
+                el.value = this.countries[item];
+                // Mostra os campos
+                document.getElementById('spoiler').style.display = 'block';
+                self = this;
+
+                document.getElementById('saveEdit').onsubmit = function () {
+                    // Obter valor
+                    var country = el.value;
+
+                    if (country) {
+                        // Edita o valor
+                        self.countries.splice(item, 1, country.trim());
+                        // Exibe a nova lista
+                        self.FetchAll();
+                        //Ocultar campos
+                        CloseInput();
+                    }
+                }
+            };
+
+
+
+        }
+
+        app.FetchAll();
+
+        // Função para fechar a janela de edição
+        function CloseInput() {
+            document.getElementById('spoiler').style.display = 'none';
+        }
+    </script>
+
+</body>
+
+</html>
+
+
+
+========================
+
+
+
+crud.html com arrow e this
+==================
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Registros</title>
+
+    <!--Como ver a cor de um CSS através de um HexaDecimal-->
+    <style>
+        h2 {
+            color: black;
+        }
+        #spoiler{
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!--Adicionando registros na nossa página-->
+    <h2>Sistema de Controle de Registros - CRUD</h2>
+    <form action="javascript:void(0);" method="POST" onsubmit="app.Add()">
+        <input type="text" id="add-name" placeholder="Digite um nome">
+        <input type="submit" value="Adicionar">
+    </form>
+
+    <!--Área destinada para editar/modificar os registros -->
+    <div id="spoiler" role="aria-hidden">
+        <form action="javascript:void(0);" method="POST" id="saveEdit">
+            <input type="text" id="edit-name">
+            <input type="submit" value="Editar" /><a onclick="CloseInput" aria-label="Close">&#10006;</a>
+
+        </form>
+    </div>
+
+    <!--Contador de Registros-->
+    <p id="counter"></p>
+
+    <!--Criando uma área com a tabela para mostrar os registros armazenados-->
+    <table border="0">
+        <!--Criando uma linha na tabela-->
+        <tr>
+            <th>Tabela de Registros</th>
+            <tbody id="countries">
+
+            </tbody>
+        </tr>
+    </table>
+
+    <!--Desenvolvendo as funções dentro do JavaScript para gerar o nosso CRUD-->
+    <script>
+        var app = new function () {
+            this.el = document.getElementById('countries');
+            this.countries = ['Erica', 'Ailson', 'Arthur', 'Gilmar', 'Vagner', 'Victor', 'Ricardo'];
+
+            this.Count = function (data) {
+                var el = document.getElementById('counter');
+                var name = 'Registro';
+
+                if (data) {
+                    if (data > 1) {
+                        name = 'Registros';
+                    }
+                    el.innerHTML = data + ' - ' + name;
+                } else {
+                    el.innerHTML = 'Nenhum ' + name;
+                }
+            }
+
+            // Monta a nossa lista de nomes com base na variável que foi setada
+            this.FetchAll = function () {
+                var data = '';
+                if (this.countries.length > 0) {
+                    //alert("contou");
+                    //Criando um laço de repetição para montar os registros da tabela
+                    for (var i = 0; i < this.countries.length; i++) {
+                        //alert("gera registro");
+                        data += '<tr>';
+                        data += '<td>' + this.countries[i] + '<td>';
+                        data += '<td><button onclick="app.Edit(' + i + ')">Editar</button></td>';
+                        data += '<td><button onclick="app.Delete(' + i + ')">Excluir</button></td>';
+                        data += '</tr>';
+                    }
+                }
+                this.Count(this.countries.length);
+                return this.el.innerHTML = data;
+
+            };
+
+            //Montando a função para adicionar um novo registro
+            this.Add = function(){
+                alert("adiconar");
+                el = document.getElementById('add-name');
+
+                //Pegando o valor digitado na caixa de texto
+                var country = el.value;
+                if(country){
+                    // Adicionando um novo valor
+                    this.countries.push(country.trim());
+                    //Redefinindo um valor de entrada
+                    el.value='';
+                    //Chama a função principal para atualizar os registros da nossa tabela
+                    this.FetchAll();
+
+                }
+            }
+
+
+        }
+
+        app.FetchAll();
+    </script>
+
+</body>
+
+</html>
+==================
+
+
+
+lendo_arquivo.html
+=================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página para leitura de arquivo</title>
+</head>
+<body>
+    <!--Leitura de arquivo do tipo txt-->
+    <h1>Leitura de Arquivo</h1>
+    <br>
+    <!--Procedimento para por um componente do HTML para selecionar um arquivo-->
+    <input type="file" onchange="loadFile(this.files[0])">
+    <br>
+    
+    
+    <!--Criar a área para demonstrar os registros do arquivo-->
+    <textarea id="output"></textarea>
+
+
+    <!--Chamar o script que irá ler o arquivo e enviar os dados para o campo acima-->
+    <script>
+        async function loadFile(file){
+            let text =await file.text();
+            document.getElementById('output').textContent=text;
+        }
+    </script>
+</body>
+</html>
+
+=================
+
+
+
+arquivo.html
+=============
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!--Definindo um cabeçalho-->
+    <h1>Criando um arquivo com JavaScript</h1>
+    <div>
+        <label>Nome do Arquivo</label><br>
+        <input type="text" id="titulo" class="arquivo" placeholder="Digite o Nome do Arquivo que deseja Gerar">
+    </div>
+    <div>
+        <label>Digite o Texto desejado</label><br>
+        <textarea id="texto" cols="40 " rows="3"></textarea>
+    </div>
+    <div>
+        <button onclick="salvar()">Salvar</button>
+    </div>
+
+  <!--Fazendo a chamada das bibliotecas em JavaScript-->
+    <script type="text/javascript" src="../javascript/FileSaver.js"></script>
+    <script src="../javascript/index.js"></script>
+</body>
+</html>
+====================
+
+
+index.js
+=======================
+function salvar(){
+    let texto = document.getElementById("texto").value;
+
+    let titulo = document.getElementById("titulo").value;
+
+    let blob = new Blob([texto],
+    {
+        type:"text/plain;charset=utf-8"
+
+    });
+    saveAs(blob,titulo + ".txt");
+}
+
+=======================
+
+API - JavaScript
+================
+FileSaver.js
+================
+/*
+* FileSaver.js
+* A saveAs() FileSaver implementation.
+*
+*
+*/
+
+// The one and only way of getting global scope in all environments
+// https://stackoverflow.com/q/3277182/1008999
+var _global = typeof window === 'object' && window.window === window
+  ? window : typeof self === 'object' && self.self === self
+  ? self : typeof global === 'object' && global.global === global
+  ? global
+  : this
+
+function bom (blob, opts) {
+  if (typeof opts === 'undefined') opts = { autoBom: false }
+  else if (typeof opts !== 'object') {
+    console.warn('Deprecated: Expected third argument to be a object')
+    opts = { autoBom: !opts }
+  }
+
+  // prepend BOM for UTF-8 XML and text/* types (including HTML)
+  // note: your browser will automatically convert UTF-16 U+FEFF to EF BB BF
+  if (opts.autoBom && /^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
+    return new Blob([String.fromCharCode(0xFEFF), blob], { type: blob.type })
+  }
+  return blob
+}
+
+function download (url, name, opts) {
+  var xhr = new XMLHttpRequest()
+  xhr.open('GET', url)
+  xhr.responseType = 'blob'
+  xhr.onload = function () {
+    saveAs(xhr.response, name, opts)
+  }
+  xhr.onerror = function () {
+    console.error('could not download file')
+  }
+  xhr.send()
+}
+
+function corsEnabled (url) {
+  var xhr = new XMLHttpRequest()
+  // use sync to avoid popup blocker
+  xhr.open('HEAD', url, false)
+  try {
+    xhr.send()
+  } catch (e) {}
+  return xhr.status >= 200 && xhr.status <= 299
+}
+
+// `a.click()` doesn't work for all browsers (#465)
+function click (node) {
+  try {
+    node.dispatchEvent(new MouseEvent('click'))
+  } catch (e) {
+    var evt = document.createEvent('MouseEvents')
+    evt.initMouseEvent('click', true, true, window, 0, 0, 0, 80,
+                          20, false, false, false, false, 0, null)
+    node.dispatchEvent(evt)
+  }
+}
+
+// Detect WebView inside a native macOS app by ruling out all browsers
+// We just need to check for 'Safari' because all other browsers (besides Firefox) include that too
+// https://www.whatismybrowser.com/guides/the-latest-user-agent/macos
+var isMacOSWebView = _global.navigator && /Macintosh/.test(navigator.userAgent) && /AppleWebKit/.test(navigator.userAgent) && !/Safari/.test(navigator.userAgent)
+
+var saveAs = _global.saveAs || (
+  // probably in some web worker
+  (typeof window !== 'object' || window !== _global)
+    ? function saveAs () { /* noop */ }
+
+  // Use download attribute first if possible (#193 Lumia mobile) unless this is a macOS WebView
+  : ('download' in HTMLAnchorElement.prototype && !isMacOSWebView)
+  ? function saveAs (blob, name, opts) {
+    var URL = _global.URL || _global.webkitURL
+    // Namespace is used to prevent conflict w/ Chrome Poper Blocker extension (Issue #561)
+    var a = document.createElementNS('http://www.w3.org/1999/xhtml', 'a')
+    name = name || blob.name || 'download'
+
+    a.download = name
+    a.rel = 'noopener' // tabnabbing
+
+    // TODO: detect chrome extensions & packaged apps
+    // a.target = '_blank'
+
+    if (typeof blob === 'string') {
+      // Support regular links
+      a.href = blob
+      if (a.origin !== location.origin) {
+        corsEnabled(a.href)
+          ? download(blob, name, opts)
+          : click(a, a.target = '_blank')
+      } else {
+        click(a)
+      }
+    } else {
+      // Support blobs
+      a.href = URL.createObjectURL(blob)
+      setTimeout(function () { URL.revokeObjectURL(a.href) }, 4E4) // 40s
+      setTimeout(function () { click(a) }, 0)
+    }
+  }
+
+  // Use msSaveOrOpenBlob as a second approach
+  : 'msSaveOrOpenBlob' in navigator
+  ? function saveAs (blob, name, opts) {
+    name = name || blob.name || 'download'
+
+    if (typeof blob === 'string') {
+      if (corsEnabled(blob)) {
+        download(blob, name, opts)
+      } else {
+        var a = document.createElement('a')
+        a.href = blob
+        a.target = '_blank'
+        setTimeout(function () { click(a) })
+      }
+    } else {
+      navigator.msSaveOrOpenBlob(bom(blob, opts), name)
+    }
+  }
+
+  // Fallback to using FileReader and a popup
+  : function saveAs (blob, name, opts, popup) {
+    // Open a popup immediately do go around popup blocker
+    // Mostly only available on user interaction and the fileReader is async so...
+    popup = popup || open('', '_blank')
+    if (popup) {
+      popup.document.title =
+      popup.document.body.innerText = 'downloading...'
+    }
+
+    if (typeof blob === 'string') return download(blob, name, opts)
+
+    var force = blob.type === 'application/octet-stream'
+    var isSafari = /constructor/i.test(_global.HTMLElement) || _global.safari
+    var isChromeIOS = /CriOS\/[\d]+/.test(navigator.userAgent)
+
+    if ((isChromeIOS || (force && isSafari) || isMacOSWebView) && typeof FileReader !== 'undefined') {
+      // Safari doesn't allow downloading of blob URLs
+      var reader = new FileReader()
+      reader.onloadend = function () {
+        var url = reader.result
+        url = isChromeIOS ? url : url.replace(/^data:[^;]*;/, 'data:attachment/file;')
+        if (popup) popup.location.href = url
+        else location = url
+        popup = null // reverse-tabnabbing #460
+      }
+      reader.readAsDataURL(blob)
+    } else {
+      var URL = _global.URL || _global.webkitURL
+      var url = URL.createObjectURL(blob)
+      if (popup) popup.location = url
+      else location.href = url
+      popup = null // reverse-tabnabbing #460
+      setTimeout(function () { URL.revokeObjectURL(url) }, 4E4) // 40s
+    }
+  }
+)
+
+_global.saveAs = saveAs.saveAs = saveAs
+
+if (typeof module !== 'undefined') {
+  module.exports = saveAs;
+}
+
+==============================
+
+
+
+
+Calculadora.html  ------> com bootstrap
+==============
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suuuper Calculadora</title>
+
+    <!--Chamada das bibliotecas externas do CSS BootStrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <!--Chamada das bibliotecas externas do JS BootStrap-->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+
+
+
+    <!--Criar o estilo do display-->
+    <style>
+
+        #display{
+            width: 250px;
+            height: 40px;
+            background-color: black;
+            margin: 4px;
+            color:white;
+            font-size: 18px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-weight: bold;
+        }
+
+       /*Padrão botões*/
+       #tecla0{
+        width: 120px;
+        height: 30px;
+       }
+
+       .vermelho{
+        background-color: red;
+       }
+       .amarelo{
+        background-color: yellow;
+       }
+        
+    </style>
+
+    <!--Criando funções em JavaScript para a nossa calculadora-->
+    <script>
+        /*Criando uma função para inserir valores no nosso display da calculadora*/
+        function inserir(num){
+            var numero=document.getElementById('display').innerHTML;
+            document.getElementById('display').innerHTML=numero+num;
+
+        }
+
+        /*Limpando o conteúdo do nosso display*/
+        function limpar(){
+            document.getElementById('display').innerHTML=" ";
+        }
+
+    </script>
+    
+    
+
+
+</head>
+<body>
+    
+    <!--Criando o nosso display da calculadora-->
+    <p id="display"></p>
+
+    <!--Criando os  botões de interação da calculadora-->
+    <button id="tecla1" onclick="inserir('1')">1</button>
+    <button id="tecla2" onclick="inserir('2')">2</button>
+    <button id="tecla3">3</button>
+    <button id="tecla4">4</button><br><br>
+    <button id="tecla5">5</button>
+    <button id="tecla6">6</button>
+    <button id="tecla7">7</button>
+    <button id="tecla8">8</button><br><br>
+    <button id="tecla9">9</button>
+    <button id="tecla0">0</button>
+    <button id="tecla+" onclick="inserir('+')">+</button>
+    <button id="tecla-">-</button>
+    <button id="tecla*">*</button>
+    <button id="tecla/">/</button>
+    <button id="tecla/" onclick="inserir('.')">.</button>
+    <button id="tecla=" onclick="inserir('=')">=</button>
+    <button id="tecla=" onclick="limpar()">C</button>   
+    
+
+    <!--Montando um layout com div-->
+    <div class="container">  
+        <div class="row">
+            <div class="col-3 vermelho"><button id="tecla1" onclick="inserir('1')">1</button></div>
+            <div class="col-3 amarelo">2</div>
+            <div class="col-3">3</div>
+            <div class="col-3">4</div>
+        
+        </div>
+        <div class="row">
+            <div class="col-3 vermelho">5</div>
+            <div class="col-3 amarelo">6</div>
+            <div class="col-3">3</div>
+            <div class="col-3">4</div>
+        
+        </div>
+        
+    </div>
+  
+
+
+
+
+</body>
+</html>
+
+
+
+Calculadora.html  ---- > sem bootstrap
+==============
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suuuper Calculadora</title>
+
+    <!--Criar o estilo do display-->
+    <style>
+
+        #display{
+            width: 250px;
+            height: 40px;
+            background-color: black;
+            margin: 4px;
+            color:white;
+            font-size: 18px;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            font-weight: bold;
+        }
+
+       /*Padrão botões*/
+       #tecla0{
+        width: 120px;
+        height: 30px;
+       }
+        
+    </style>
+
+    <!--Criando funções em JavaScript para a nossa calculadora-->
+    <script>
+        /*Criando uma função para inserir valores no nosso display da calculadora*/
+        function inserir(num){
+            var numero=document.getElementById('display').innerHTML;
+            document.getElementById('display').innerHTML=numero+num;
+
+        }
+
+        /*Limpando o conteúdo do nosso display*/
+        function limpar(){
+            document.getElementById('display').innerHTML=" ";
+        }
+
+    </script>
+    
+    
+
+
+</head>
+<body>
+    
+    <!--Criando o nosso display da calculadora-->
+    <p id="display"></p>
+
+    <!--Criando os  botões de interação da calculadora-->
+    <button id="tecla1" onclick="inserir('1')">1</button>
+    <button id="tecla2" onclick="inserir('2')">2</button>
+    <button id="tecla3">3</button>
+    <button id="tecla4">4</button><br><br>
+    <button id="tecla5">5</button>
+    <button id="tecla6">6</button>
+    <button id="tecla7">7</button>
+    <button id="tecla8">8</button><br><br>
+    <button id="tecla9">9</button>
+    <button id="tecla0">0</button>
+    <button id="tecla+" onclick="inserir('+')">+</button>
+    <button id="tecla-">-</button>
+    <button id="tecla*">*</button>
+    <button id="tecla/">/</button>
+    <button id="tecla/" onclick="inserir('.')">.</button>
+    <button id="tecla=" onclick="inserir('=')">=</button>
+    <button id="tecla=" onclick="limpar()">C</button>   
+    
+
+
+
+</body>
+</html>
+
+
+
+Criando laço de repetição e utilização da variável const
+=========================================
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criando Regitros com Laco de Repetição</title>
+
+    <script>
+        // Criei uma variável do tipo matriz, um array
+        const nome=["Pedro","Paulo","Ana","Flávia","Luciana","Nicole"];
+        /*alert(nome[0]);
+        alert(nome[1]);
+        alert(nome[2]);
+        alert(nome[3]);*/
+
+        alert(nome.length);
+        //Criando um laço de repetição
+        for (let contador=0; contador<=10; contador++){
+            alert(contador);
+        }
+
+    </script>
+
+
+
+
+</head>
+<body>
+    
+</body>
+</html>
+
+
+
+Formulário.html
+===============
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário Cadastro</title>
+
+    <script>
+        // Criando uma função em JavaScript
+        function mensagem() {
+            alert("Executando uma função em JavaScript");
+        }
+
+        //Criando uma função em JS, para validar os campos do formulário
+        function validar() {
+            let CampoNome = cadastro.nome.value;
+            if (CampoNome == "") {
+                alert("Por favor preencha o campo nome pois ele é obrigatório");
+                cadastro.nome.focus();
+                return false;
+            } else {
+                alert("Olá " + CampoNome + " sejam bem vindo");
+            }
+        }
+    </script>
+
+</head>
+
+<body>
+    <!--
+        <form>
+            <input type="button" onclick="mensagem()" value="Click">
+        </form>-->
+
+    <form name="cadastro" method="get">
+        <label>Nome:</label>
+        <input type="text" name="nome"><br><br>
+        <label>Senha:</label>
+        <input type="password" name="senha">
+        <input type="submit" onclick="return validar()" value="Enviar">
+    </form>
+
+</body>
+
+</html>
+
+
+
+Página Index.html
+================
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página em JavaScript</title>
+
+    <!--Criando a nossa intervenção em JavaScript-->
+    <!--<script>
+        // Trabalhar com variáveis 
+
+        /*var mensagem ="Seja bem vindo";
+        var mensagem1="a nossa página com JavaScript";
+        alert(mensagem+" "+mensagem1);*/
+
+        /*var nome = prompt("Olá seja bem vindo, qual é o seu nome?");
+        alert("Prazer "+nome);*/
+
+        // Uma mensagem demonstrada na tela
+        //alert("Seja bem vindo a nossa página com JavaScript ");
+    
+    </script>-->
+        
+    <style>
+        /* Criando um estilo para tag nativa em html*/ 
+        p{
+            color:red;
+        }
+
+        body{
+            background-color: yellow;
+        }
+
+        /*Criando um estilo para classes */
+        .virgem{
+            color:green;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+<body>
+        <h1>Usando o JavaScript para crijar uma intervenção com o nosso HTML</h1>
+        <p class="java"></p>
+        <p>Isso é o meu primeiro parágrafo</p>
+        <p>Isso é outro parágrafo</p>
+        
+   
+        <p id="texto"></p><br>
+        <p id="texto1" ></p>
+     
+
+        <script> 
+            //Insere um texto na tag desejada
+            document.getElementsByTagName("p")[1].innerHTML="Olá boa noite";
+
+            //Insere um texto no id que está sendo relacionado 
+            document.getElementById("texto").innerHTML="Oi meus querido(a)s";
+            document.getElementById("texto1").innerHTML="Vamos codar em JavaScritp";
+            
+            //Inserir um conteúdo na classe criada para o java
+            const collection=document.getElementsByClassName("java");
+            collection[0].innerHTML="Oi";
+
+        </script>
+
+
+</body>
+</html>
+
+
+teste_js.html
+=============
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        
+        p{
+            color: blue;
+        }
+    
+        .cor{
+            color:rebeccapurple;
+        }
+    </style>
+</head>
+<body>
+    <p>Eu sou um parágrafo</p>
+    <p class="cor">Parágrafo 2</p>
+    <p>Parágrafo 3</p>
+
+    <script>
+        // Como atribuir uma cor com estilo CSS em uma tag da nossa página
+        document.querySelector("p").style.color="red";
+     
+
+    </script>
+</body>
+</html>
+
+
+
+1- Criamos uma pasta
+2- Depois instalamos a aplicação
+3- abrir a pasta criada
+4- clicar com o botão direito na pasta, vamos escolher a opção git bash here
+5- git --help
+6- git --version
+7- criei um arquivo de desenvolvimento dentro da pasta
+8- git add . ou git add * criação da pilha que irá fazer o upload
+9 -git status
+10- git commit -m "Criando um arquivo de dados"
+*** se for a sua primeira vez !!!
+
+É a conta de e-mail que você utilizou para o seu github
+git config --global user.email"ricardo.bontempo@gmail.com.br"
+
+Depois de apontar o e-mail utilizado na sua conta,
+ponha o nome do usuário que foi criado
+git config --global user.name"RAB1802"
+
+11- git push
+Neste momento o programa git d versionamento irá pedir a sua pasta de armazenamento do github
+
+Criando um branch
+12 - git branch <nome da pasta> Exemplo teste
+13 - git checkout 'teste'
+14 - git add *
+15 - git status
+16 - git commit -m "Area para testes do usuário"
+17 - git push
+OBS.: é capaz dele pedir para você efetuar o push com o endereço do branch novo ou seja teste.
+
+
+Quando criamos um novo branch
+
+você pode fazer git checkout -b <branch>
+assim ele já cria a nova branch e já vai direto para ela
+
+**** Caso você tenha desenvolvido algo novo na sua aplicação e precisa subir novamente no seu github o novo conteúdo, você após adicionar as novas 
+alterações deverá dar a sequencia de git add . , depois dit status 
+git push origin main
