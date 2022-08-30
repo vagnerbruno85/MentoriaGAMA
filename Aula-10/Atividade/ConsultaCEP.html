@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consultar CEP</title>
+
+    <style>
+      body {
+        padding-top: 5%;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-size: 14px;
+        font-weight: bold;
+      }
+      form {
+        margin: 0 auto;
+        width: 400px;
+        padding: 1em;
+        border: 1px solid #ccc;
+        border-radius: 1em;
+        background-color: #f6f6f6;
+      }
+      h2 {
+        
+        text-align: center;
+      }
+      label {
+        display: inline-block;
+        width: 90px;
+        text-align: right;
+      }
+      input {
+        font: 1em sans-serif;
+        width: 300px;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        border: 1px solid #999;
+      }
+      input:focus {
+        border-color: #000;
+      }
+      button {
+        margin-left: 0.5em;
+        height: 2.5em;
+        background: #b6e6a7;
+        border-radius: 4px;
+        border: none;
+      }
+      #logo {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        width: 50px;
+      }
+      #btnProcessar {
+        background-color: rgb(79, 199, 79);
+      }
+      #btnLimpar {
+        background-color: rgb(255, 118, 118);
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Consulta de CEP</h2>
+
+    <form id="frmCEP">
+      <img src="./assets/logoGAMA.png" id="logo"/><br>
+
+      <label>Nome:</label>
+      <input type="text" id="nome" /><br><br>
+
+      <label>Digite um CEP:</label>
+      <input type="text" id="cep" /><br><br>
+
+      <button type="button" onclick="pesquisaCep()" id="btnConsultar">
+        Consultar
+      </button><br><br>
+
+      <legend>Dados do CEP:</legend><br>
+      <label>Endereço:</label>
+      <input type="text" id="logradouro" /><br>
+
+      <label>Bairro:</label>
+      <input type="text" id="bairro" /><br>
+
+      <label>Cidade:</label>
+      <input type="text" id="cidade" /><br>
+
+      <label>Estado:</label>
+      <input type="text" id="estado" /><br><br>
+
+      <button type="button" onclick="limpar()" id="btnLimpar">Limpar</button
+      ><br /><br />
+    </form>
+
+    <script src="./main.js"></script>
+  </body>
+</html>
