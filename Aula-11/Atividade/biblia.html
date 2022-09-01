@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requisição - Biblia Digital </title>
+</head>
+<body>
+    <h1>Biblia DIGITAL</h1>
+    <label>Digite o salmo desejado</label>
+    <input type="number" id="numSalmos"/>
+    <button onclick="pesquisaSalmos()"> Processar</button><br><br>
+
+
+    <label>Nome:</label>
+    <input type="text" id="nome"/><br><br>
+
+    <label>Autores:</label>
+    <input type="text" id="autores"/><br><br>
+
+    <label>Grupo:</label>
+    <input type="text" id="grupo"/><br><br>
+
+    <label>Versus:</label><br><br>
+
+    <table border="1" id="tblVersus">
+        <tr>
+          <th colspan="2" id="title">Salmos <p id="capit"></p></th>
+          <tbody id="versus"></tbody>
+        </tr>
+    </table>
+
+    <script src="./main.js"></script>
+    
+</body>
+</html>
