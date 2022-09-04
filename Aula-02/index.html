@@ -1,15 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Página em JavaScript</title>
-    <script>
-        
-        // RECONHECIMENTO DO AMBIENTE HTML E JAVASCRIPT //
 
-        /*
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="styles.css">
+    <script>
+      // RECONHECIMENTO DO AMBIENTE HTML E JAVASCRIPT //
+
+      /*
         let msg = "Seja bem Vindo";
         let msg2 = " você tem: "; 
 
@@ -27,45 +39,50 @@
         document.writeln("<h2>Seja bem vindo ao meu site</h2>");
         */
     </script>
-    <style>
-        /*criando stilo em tag nativo do html*/
-        p{
-            color: #571047;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        body{
-            background-color: #cccccc;
-        }
-    </style>
-</head>
-<body>
-    <h1>Usando o JavaScript para criar intervenções com nosso HTML</h1>
-    <p id="paragrafo">
-        <strong>
-            Seja bem vindo ao meu site
-        </strong>
-    </p>
+  </head>
+  <body>
+    <div id="content">
+      <div class="container">
+        <h1>Usando o JavaScript para criar intervenções com nosso HTML</h1>
 
-    <p id="texto"></p>
-    <p id="texto1"></p><br>
-    <p id="texto2"></p><br>
-    <p class="java"></p><br>
+        <div class="col-md-12">
+          <div >
+            <p id="paragrafo">
+              <strong> Seja bem vindo ao meu site! </strong>
+            </p>
+          </div>
+        </div>
+        <div class="row-md-6">
+          <div class="configdiv">
+            <p id="texto"></p>
+            <p id="texto1"></p>
+            <br />
+            <p id="texto2"></p>
+            <br />
+            <p class="java"></p>
+            <br />
+            <center>
+              <img src="./assets/welcome.png" class="row-md-3 image">
+            </center>
+          </div>
+        </div>
 
+        <div></div>
+      </div>
+    </div>
     <script>
-        let paragrafo = document.getElementById("paragrafo");
-        paragrafo.style.color = "red";
-        paragrafo.style.fontSize = "20px";
-        paragrafo.style.fontWeight = "bold";
+      let paragrafo = document.getElementById("paragrafo");
+      paragrafo.style.color = "red";
+      paragrafo.style.fontSize = "20px";
+      paragrafo.style.fontWeight = "bold";
 
-        document.getElementById("texto").innerHTML = "Bem vindos meus amigos";
-        document.getElementsByTagName("p")[0].innerHTML = "Bem vindos ao meu site";
-        paragrafo.style.color = "blue";
+      document.getElementById("texto").innerHTML = "Bem vindos meus amigos !!!";
+      document.getElementsByTagName("p")[0].innerHTML =
+        "Bem vindos ao meu site";
+      paragrafo.style.color = "blue";
 
-        document.getElementsByClassName("java");
-        collection[0].innerHTML = "Oi";
+      document.getElementsByClassName("java");
+      collection[0].innerHTML = "Oi";
     </script>
-    
-
-</body>
+  </body>
 </html>
